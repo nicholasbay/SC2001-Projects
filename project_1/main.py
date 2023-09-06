@@ -14,7 +14,6 @@ def insertion_sort(dataset):
     # insertion sort logic
 
 
-
 # Merge sort
 def merge_sort(dataset):
     # merge sort logic
@@ -22,12 +21,19 @@ def merge_sort(dataset):
 
 # Driver function
 def main():
+    # Generate random dataset of size n
     data = generate_dataset(constant.n)
-
+    
+    # Time measurement from here?
     if constant.n > constant.S:
         merge_sort(data)
     else:
         insertion_sort(data)
+    # End time measurement here?
+
+    # Output sorted dataset
+    for i in data:
+        print(i)
 
 
 if __name__ == '__main__':
