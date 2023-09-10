@@ -27,8 +27,18 @@ def insertion_sort(arr,keys):
     return keys
 
 
-# Mergesort
-def merge_sort(arr,keys):
+# Mergesort 
+def merge_sort(arr, keys):
+    mid = int(len(arr) / 2)
+    
+    left_half = merge_sort(arr[:mid], keys)
+    right_half = merge_sort(arr[mid:], keys)
+
+    return merge(left_half, right_half, keys)
+
+
+# Hybrid sort
+def hybrid_sort(arr,keys):
     mid = int(len(arr) / 2)
 
     if len(arr) <= constant.S:
@@ -38,8 +48,8 @@ def merge_sort(arr,keys):
         return arr, keys
     else:
         print("Im using merge sort")
-        left_half, keys = merge_sort(arr[:mid],keys)
-        right_half, keys = merge_sort(arr[mid:],keys)
+        left_half, keys = hybrid_sort(arr[:mid],keys)
+        right_half, keys = hybrid_sort(arr[mid:],keys)
 
     return merge(left_half, right_half,keys)
 
@@ -64,11 +74,6 @@ def merge(left, right, keys):
     return result, keys
 
 
-# Hybrid sort (merge & insertion)
-# def hybrid_sort(arr, n):
-# merge sort for n > S, insertion sort for n < S
-
-
 # Driver function
 def main():
     # Generate random dataset of size n
@@ -80,24 +85,15 @@ def main():
         print(dataset[i], end=" ")
     print()
 
-    #Use Merge_sort if n > S
+    #Use hybrid_sort if n > S
     result = []
-    result, keys = merge_sort(dataset,keys)
+    result, keys = hybrid_sort(dataset,keys)
     print()
     print("The mergesort is: ")
     for i in range(len(result)):
         print(result[i], end=" ")
     print()
     print("The number of key comparisons is", keys)
-
-    '''
-    # Time measurement from here?
-    if constant.n > constant.S:
-        merge_sort(dataset, constant.n)
-    else:
-        insertion_sort(dataset, constant.n)
-    # End time measurement here?
-    '''
 
 
 if __name__ == '__main__':
