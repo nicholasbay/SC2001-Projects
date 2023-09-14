@@ -78,7 +78,7 @@ def main():
     writer = pd.ExcelWriter("project_1/results.xlsx")
 
     # c)i) Constant S, varying n
-    print("i) Constant S, varying n")
+    print("c)i) Constant S, varying n")
     # Initialise S & n
     constant.S = 100
     constant.n = 100
@@ -128,7 +128,7 @@ def main():
     print()
 
     # c)ii) Constant n, varying S
-    print("ii) Constant n, varying S")
+    print("c)ii) Constant n, varying S")
     # Initialise n & S
     constant.S = 1
     constant.n = 100000
@@ -178,7 +178,7 @@ def main():
     print()
 
     # c)iii) Varying S & n
-    print("iii) Varying S & n")
+    print("c)iii) Varying S & n")
     # Initialise S & n
     constant.S = 1
     constant.n = 1000
