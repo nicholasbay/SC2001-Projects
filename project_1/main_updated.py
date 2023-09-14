@@ -74,11 +74,14 @@ def merge(left, right, key_comp):
 
 # Driver function
 def main():
+    # ExcelWriter object for exporting results to Excel
+    writer = pd.ExcelWriter("project_1/results.xlsx")
+
     # c)i) Constant S, varying n
     print("i) Constant S, varying n")
     # Initialise S & n
     constant.S = 100
-    constant.n = 1000
+    constant.n = 100
     # List of measurements for part i
     list_i = []
 
@@ -117,8 +120,10 @@ def main():
 
     # Collate all measurements for part i into DataFrame
     df_i = pd.DataFrame(list_i)
-    # Print DataFrame
-    print(repr(df_i))
+    # Export DataFrame to Excel
+    df_i.to_excel(writer, sheet_name="c)i)")
+    # Process complete
+    print("c)i) done")
 
     print()
 
@@ -130,7 +135,7 @@ def main():
     # List of measurements for part ii
     list_ii = []
 
-    while (constant.S <= constant.n):
+    while (constant.S <= 1000):
         # Generate random dataset of size n
         data = generate_dataset(constant.n)
         # Count key comparisons
@@ -165,13 +170,13 @@ def main():
 
     # Collate all measurements for part ii into DataFrame
     df_ii = pd.DataFrame(list_ii)
-    # Print DataFrame
-    print(repr(df_ii))
+    # Export DataFrame to Excel
+    df_ii.to_excel(writer, sheet_name="c)ii)")
+    # Process complete
+    print("c)ii) done")
 
     print()
 
-    '''
-    Takes forever to run
     # c)iii) Varying S & n
     print("iii) Varying S & n")
     # Initialise S & n
@@ -181,7 +186,7 @@ def main():
     list_iii = []
 
     while constant.n <= 10000000:
-        while constant.S <= constant.n:
+        while constant.S <= 1000:
             # Generate random dataset of size n
             data = generate_dataset(constant.n)
             # Count key comparisons
@@ -213,14 +218,20 @@ def main():
             
             # Increment S in powers of 10
             constant.S *= 10
+        # Reset S to 1
+        constant.S = 1
         # Increment n in powers of 10
         constant.n *= 10
 
     # Collate all measurements for part ii into DataFrame
     df_iii = pd.DataFrame(list_iii)
-    # Print DataFrame
     print(repr(df_iii))
-    '''
+    # Export DataFrame to Excel
+    df_iii.to_excel(writer, sheet_name="c)iii)")
+    # Process complete
+    print("c)iii) done")
+    # Save Excel file
+    writer.save()
 
 
 if __name__ == '__main__':
