@@ -2,6 +2,8 @@ import random
 import pandas as pd
 from timeit import default_timer as timer
 import constant
+import seaborn as sb
+import matplotlib as plt
 
 # To generate dataset of size n (without duplicates)
 def generate_dataset(n):
@@ -233,6 +235,13 @@ def main():
     # Save Excel file
     writer.save()
 
+    # Plot graph for c)i) Constant S, varying n
+    sb.jointplot(data = df_i, x = "n", y = "Key comp.")
+    # Plot graph for c)ii) Constant n, varying S
+    sb.jointplot(data = df_ii, x = "S", y = "Key comp.")
+    # Plot graph for c)iii) Varying S & n
+    sb.jointplot(data = df_iii, x = "", y = "Key comp.")
+    plt.show()
 
 if __name__ == '__main__':
     main()
