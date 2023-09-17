@@ -80,7 +80,7 @@ def merge(left, right, key_comp):
 # Driver function
 def main():
     # ExcelWriter object for exporting results to Excel
-    writer = pd.ExcelWriter("results.xlsx",mode = 'w')
+    writer = pd.ExcelWriter("results1.xlsx",mode = 'w')
 
     # c)i) Constant S, varying n
     print("c)i) Constant S, varying n")
@@ -90,7 +90,7 @@ def main():
     # List of measurements for part i
     list_i = []
 
-    while constant.n <= 10000:
+    while constant.n <= 100000:
         # Generate random dataset of size n
         data = generate_dataset(constant.n)
         # Count key comparisons
@@ -132,7 +132,7 @@ def main():
         list_i.append(dict_i)
 
         # Increment n in increment of 100
-        constant.n += 100
+        constant.n += 1000
 
     # Collate all measurements for part i into DataFrame
     df_i = pd.DataFrame(list_i)
@@ -213,10 +213,10 @@ def main():
     # List of measurements for part iii
     list_iii = []
 
-    while constant.n <= 100000:
+    while constant.n <= 1000000:
+        # Generate random dataset of size n
+        data = generate_dataset(constant.n)
         while constant.S <= 25:
-            # Generate random dataset of size n
-            data = generate_dataset(constant.n)
             # Count key comparisons
             count = 0
             # To store sorted array
@@ -263,7 +263,7 @@ def main():
     print("Comparing with Original Mergesort")
 
     # Initialise n & S
-    constant.S = 5
+    constant.S = 3
     constant.n = 10000000
     # List of measurements for part ii
     list_iv = []
