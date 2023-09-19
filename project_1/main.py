@@ -2,9 +2,7 @@ import random
 import pandas as pd
 from timeit import default_timer as timer
 import constant
-import seaborn as sb
-import matplotlib as plt
-
+import math
 
 # To generate dataset of size n (without duplicates)
 def generate_dataset(n):
@@ -91,15 +89,17 @@ def main():
     # List of measurements for part i
     list_i = []
 
-    while constant.n <= 10000:
+    while constant.n <= 100000:
         # Generate random dataset of size n
         data = generate_dataset(constant.n)
         # Count key comparisons
         count = 0
-        countM = 0
+
+        # Calculating empirical result
+        emp_results = (constant.n * constant.S) + (constant.n) * math.log10(constant.n / constant.S)
+
         # To store sorted array
         data_sorted = []
-        data_sorted1 = []
 
         # Measure time at start of sorting
         start_time = timer()
@@ -107,13 +107,6 @@ def main():
         data_sorted, count = hybrid_sort(data, count)
         # Measure time at end of sorting
         end_time = timer()
-
-        # Measure time at start of sorting for Mergesort
-        start_time1 = timer()
-        # Sort dataset
-        data_sorted1, countM = merge_sort(data, countM)
-        # Measure time at end of sorting
-        end_time1 = timer()
 
         # Ensure data is sorted
         is_sorted = all(a < b for a, b in zip(data_sorted, data_sorted[1:]))
@@ -126,14 +119,13 @@ def main():
             'n': constant.n,
             'Key comp. Hybridsort': count,
             'CPU time': end_time - start_time,
-            'Key comp. Mergesort': countM,
-            'CPU time1': end_time1 - start_time1
+            "emp_result": emp_results
         }
         # Appending measurements to list_i
         list_i.append(dict_i)
 
         # Increment n in increment of 100
-        constant.n += 100
+        constant.n += 1000
 
     # Collate all measurements for part i into DataFrame
     df_i = pd.DataFrame(list_i)
@@ -148,7 +140,7 @@ def main():
     print("c)ii) Constant n, varying S")
     # Initialise n & S
     constant.S = 1
-    constant.n = 10000
+    constant.n = 100000
     # List of measurements for part ii
     list_ii = []
     # Generate random dataset of size n
@@ -157,10 +149,12 @@ def main():
     while (constant.S <= 50):
         # Count key comparisons
         count = 0
-        countM = 0
+
         # To store sorted array
         data_sorted = []
-        data_sorted1 = []
+
+        #Calculating empirical results
+        emp_results = (constant.n * constant.S) + (constant.n) * math.log10(constant.n / constant.S)
 
         # Measure time at start of sorting
         start_time = timer()
@@ -169,13 +163,6 @@ def main():
         # Measure time at end of sorting
         end_time = timer()
 
-        # Measure time at start of sorting for MergeSort
-        data_sorted1 = []
-        start_time1 = timer()
-        # Sort dataset using Mergesort
-        data_sorted1, countM = merge_sort(data, countM)
-        # Measure time at the end of sorting for MergeSort
-        end_time1 = timer()
 
         # Ensure data is sorted
         is_sorted = all(a < b for a, b in zip(data_sorted, data_sorted[1:]))
@@ -188,8 +175,7 @@ def main():
             'n': constant.n,
             'Key comp. Hybridsort': count,
             'CPU time': end_time - start_time,
-            'Key comp. Mergesort': countM,
-            'CPU time1': end_time1 - start_time1
+            'emp_results': emp_results
         }
         # Appending measurements to list_ii
         list_ii.append(dict_ii)
@@ -214,7 +200,7 @@ def main():
     # List of measurements for part iii
     list_iii = []
 
-    while constant.n <= 100000:
+    while constant.n <= 1000:
         while constant.S <= 25:
             # Generate random dataset of size n
             data = generate_dataset(constant.n)
@@ -266,7 +252,7 @@ def main():
 
     # Initialise n & S
     constant.S = 5
-    constant.n = 10000000
+    constant.n = 1000
     # List of measurements for part d)
     list_d = []
     # Generate random dataset of size n
@@ -320,15 +306,6 @@ def main():
 
     # Save Excel file
     writer.close()
-
-    # Plot graph for c)i) Constant S, varying n
-    #sb.jointplot(data=df_i, x="n", y="Key comp.")
-    # Plot graph for c)ii) Constant n, varying S
-    #sb.jointplot(data=df_ii, x="S", y="Key comp.")
-    # Plot graph for c)iii) Varying S & n
-    #sb.jointplot(data=df_iii, x="", y="Key comp.")
-    #plt.show()
-
 
 if __name__ == '__main__':
     main()
