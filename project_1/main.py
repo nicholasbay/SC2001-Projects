@@ -314,7 +314,7 @@ def main():
     # Collate all measurements for part iii into DataFrame
     df_d = pd.DataFrame(list_d)
     # Export DataFrame to Excel
-    df_d.to_excel(writer, sheet_name="c)iv)")
+    df_d.to_excel(writer, sheet_name="d)")
     # Process complete
     print("d) done")
 
