@@ -38,7 +38,7 @@ def merge_sort(arr, keys):
 
 
 # Hybrid sort
-def hybrid_sort(arr,keys):
+def hybrid_sort(arr, keys):
     mid = int(len(arr) / 2)
 
     if len(arr) <= constant.S:
@@ -48,8 +48,8 @@ def hybrid_sort(arr,keys):
         return arr, keys
     else:
         print("Im using merge sort")
-        left_half, keys = hybrid_sort(arr[:mid],keys)
-        right_half, keys = hybrid_sort(arr[mid:],keys)
+        left_half, keys = hybrid_sort(arr[:mid], keys)
+        right_half, keys = hybrid_sort(arr[mid:], keys)
 
     return merge(left_half, right_half,keys)
 
@@ -80,14 +80,14 @@ def main():
     dataset = generate_dataset(constant.n)
     keys = 0
 
-    #Viewing dataset
+    # Viewing dataset
     for i in range(len(dataset)):
         print(dataset[i], end=" ")
     print()
 
-    #Use hybrid_sort if n > S
+    # Use hybrid_sort if n > S
     result = []
-    result, keys = hybrid_sort(dataset,keys)
+    result, keys = hybrid_sort(dataset, keys)
     print()
     print("The mergesort is: ")
     for i in range(len(result)):

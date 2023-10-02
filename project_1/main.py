@@ -2,7 +2,9 @@ import random
 import pandas as pd
 from timeit import default_timer as timer
 import constant
-import math
+import seaborn as sb
+import matplotlib as plt
+
 
 # To generate dataset of size n (without duplicates)
 def generate_dataset(n):
@@ -55,7 +57,6 @@ def hybrid_sort(arr, key_comp):
     return merge(left_half, right_half, key_comp)
 
 
-# Merge function (for mergesort)
 def merge(left, right, key_comp):
     result = []
     left_index, right_index = 0, 0
@@ -79,7 +80,7 @@ def merge(left, right, key_comp):
 # Driver function
 def main():
     # ExcelWriter object for exporting results to Excel
-    writer = pd.ExcelWriter("results.xlsx",mode = 'w')
+    writer = pd.ExcelWriter("results1.xlsx",mode = 'w')
 
     # c)i) Constant S, varying n
     print("c)i) Constant S, varying n")
@@ -94,12 +95,10 @@ def main():
         data = generate_dataset(constant.n)
         # Count key comparisons
         count = 0
-
-        # Calculating empirical result
-        emp_results = (constant.n * constant.S) + (constant.n) * math.log10(constant.n / constant.S)
-
+        countM = 0
         # To store sorted array
         data_sorted = []
+        data_sorted1 = []
 
         # Measure time at start of sorting
         start_time = timer()
@@ -107,6 +106,13 @@ def main():
         data_sorted, count = hybrid_sort(data, count)
         # Measure time at end of sorting
         end_time = timer()
+
+        # Measure time at start of sorting for Mergesort
+        start_time1 = timer()
+        # Sort dataset
+        data_sorted1, countM = merge_sort(data, countM)
+        # Measure time at end of sorting
+        end_time1 = timer()
 
         # Ensure data is sorted
         is_sorted = all(a < b for a, b in zip(data_sorted, data_sorted[1:]))
@@ -119,7 +125,8 @@ def main():
             'n': constant.n,
             'Key comp. Hybridsort': count,
             'CPU time': end_time - start_time,
-            "emp_result": emp_results
+            'Key comp. Mergesort': countM,
+            'CPU time1': end_time1 - start_time1
         }
         # Appending measurements to list_i
         list_i.append(dict_i)
@@ -140,7 +147,7 @@ def main():
     print("c)ii) Constant n, varying S")
     # Initialise n & S
     constant.S = 1
-    constant.n = 100000
+    constant.n = 10000
     # List of measurements for part ii
     list_ii = []
     # Generate random dataset of size n
@@ -149,12 +156,10 @@ def main():
     while (constant.S <= 50):
         # Count key comparisons
         count = 0
-
+        countM = 0
         # To store sorted array
         data_sorted = []
-
-        #Calculating empirical results
-        emp_results = (constant.n * constant.S) + (constant.n) * math.log10(constant.n / constant.S)
+        data_sorted1 = []
 
         # Measure time at start of sorting
         start_time = timer()
@@ -163,6 +168,13 @@ def main():
         # Measure time at end of sorting
         end_time = timer()
 
+        # Measure time at start of sorting for MergeSort
+        data_sorted1 = []
+        start_time1 = timer()
+        # Sort dataset using Mergesort
+        data_sorted1, countM = merge_sort(data, countM)
+        # Measure time at the end of sorting for MergeSort
+        end_time1 = timer()
 
         # Ensure data is sorted
         is_sorted = all(a < b for a, b in zip(data_sorted, data_sorted[1:]))
@@ -175,7 +187,8 @@ def main():
             'n': constant.n,
             'Key comp. Hybridsort': count,
             'CPU time': end_time - start_time,
-            'emp_results': emp_results
+            'Key comp. Mergesort': countM,
+            'CPU time1': end_time1 - start_time1
         }
         # Appending measurements to list_ii
         list_ii.append(dict_ii)
@@ -200,10 +213,10 @@ def main():
     # List of measurements for part iii
     list_iii = []
 
-    while constant.n <= 1000:
+    while constant.n <= 1000000:
+        # Generate random dataset of size n
+        data = generate_dataset(constant.n)
         while constant.S <= 25:
-            # Generate random dataset of size n
-            data = generate_dataset(constant.n)
             # Count key comparisons
             count = 0
             # To store sorted array
@@ -240,20 +253,19 @@ def main():
 
     # Collate all measurements for part iii into DataFrame
     df_iii = pd.DataFrame(list_iii)
+    print(repr(df_iii))
     # Export DataFrame to Excel
     df_iii.to_excel(writer, sheet_name="c)iii)")
     # Process complete
     print("c)iii) done")
 
-    print()
-
-    # d) Comparing with Original Mergesort
-    print("d) Comparing with Original Mergesort")
+    # Comparing with Mergesort
+    print("d) Comparing with Mergesort")
 
     # Initialise n & S
-    constant.S = 5
-    constant.n = 1000
-    # List of measurements for part d)
+    constant.S = 3
+    constant.n = 10000000
+    # List of measurements for part ii
     list_d = []
     # Generate random dataset of size n
     data = generate_dataset(constant.n)
@@ -286,7 +298,7 @@ def main():
         print("Error")
 
     # Collating measurements to dict
-    dict_iv = {
+    dict_d = {
         'S': constant.S,
         'n': constant.n,
         'Key comp. Hybridsort': count,
@@ -295,10 +307,11 @@ def main():
         'CPU time1': end_time1 - start_time1
     }
     # Appending measurements to list_d
-    list_d.append(dict_iv)
+    list_d.append(dict_d)
 
     # Collate all measurements for part iii into DataFrame
     df_d = pd.DataFrame(list_d)
+    print(repr(df_d))
     # Export DataFrame to Excel
     df_d.to_excel(writer, sheet_name="d)")
     # Process complete
@@ -306,6 +319,7 @@ def main():
 
     # Save Excel file
     writer.close()
+
 
 if __name__ == '__main__':
     main()
