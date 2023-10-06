@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.Random;
 
 public class Graph {
-    static final int MAX_WEIGHT = 10;
+    static final int MAX_WEIGHT = 1000000;
     // Instance variables
     int V;
     int E;
@@ -12,7 +12,8 @@ public class Graph {
     int[][] adjMatrix;
     
     // Constructors
-    public Graph(int V, boolean randomise) {
+    // For non-random graph, density = 0
+    public Graph(int V, boolean randomise, double density) {
         this.V = V;
         // Create new adjacency list of size V
         adjList = new LinkedList[V];
@@ -30,10 +31,10 @@ public class Graph {
         
         // To create random graph
         Random rand = new Random();
-        // Max. edges for directed graph = V * (V - 1), excluding self loops
-        int maxE = V * (V - 1);
-        int randEdgeCount = rand.nextInt(maxE - V + 1) + 1;
-        for (int i = 0; i < randEdgeCount; i++) {
+        // Generates number of edges based on required density of graph
+        // Max. edges in a directed graph = V * (V - 1)
+        int edgeCount = (int)(density * V * (V - 1));
+        for (int i = 0; i < edgeCount; i++) {
             int src = rand.nextInt(V);
             int dest = rand.nextInt(V);
             // Ensure no self loops & no existing edge

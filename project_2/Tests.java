@@ -6,20 +6,25 @@ public class Tests {
     static final int MIN_NO_OF_VERTICES = 10;
     static final int RUN_COUNT_PER_GRAPH = 10;
 
+    public enum GraphDensity {
+        SPARSE,
+        NEUTRAL,
+        DENSE
+    }
+
     public static void main(String[] args) throws Exception {
         Scanner scan = new Scanner(System.in);
+        int choice = 0;
         
-        while (true) {
+        do {
             System.out.println("\n1. testPrintGraph()");
             System.out.println("2. testDijkstraArray()");
             System.out.println("3. testDijkstraPQ()");
             System.out.println("4. testCreateRandGraph()");
-            System.out.println("5. empiricalTestV()");
-            // TODO: empiricalTestE(), vary E for fixed V
-            System.out.println("6. empiricalTestE()");
-            System.out.println("7. Exit\n");
+            System.out.println("5. empiricalTest()");
+            System.out.println("6. Exit\n");
             System.out.println("Enter choice:");
-            int choice = Integer.parseInt(scan.nextLine());
+            choice = Integer.parseInt(scan.nextLine());
             switch (choice) {
                 case 1:
                     testPrintGraph();
@@ -36,13 +41,17 @@ public class Tests {
                     break;
                 case 5:
                     System.out.println("Enter max. number of vertices:");
-                    empiricalTestV(Integer.parseInt(scan.nextLine()));
+                    int maxV = Integer.parseInt(scan.nextLine());
+                    
+                    System.out.println("\nSPARSE graph (edge density = 0.25)");
+                    System.out.println("NEUTRAL graph (edge density = 0.5)");
+                    System.out.println("DENSE graph (edge density = 0.75)\n");
+                    System.out.println("Choose density of graph to be generated (SPARSE / NEUTRAL / DENSE):");
+                    GraphDensity density = GraphDensity.valueOf(scan.nextLine().toUpperCase());
+                    
+                    empiricalTest(maxV, density);
                     break;
                 case 6:
-                    System.out.println("Enter number of vertices:");
-                    empiricalTestE(Integer.parseInt(scan.nextLine()));
-                    break;
-                case 7:
                     scan.close();
                     System.exit(0);
                     break;
@@ -50,11 +59,11 @@ public class Tests {
                     System.out.println("Invalid choice, please try again!");
                     break;
             }
-        }
+        } while (choice != 6);
     }
 
     private static Graph sampleGraph() {
-        Graph g = new Graph(6, false);
+        Graph g = new Graph(6, false, 0);
         g.addEdge(0, 1, 4);
         g.addEdge(0, 2, 3);
         g.addEdge(1, 2, 5);
@@ -88,12 +97,13 @@ public class Tests {
     }
 
     private static void testCreateRandGraph(int V) {
-        Graph g = new Graph(V, true);
+        // Generate random graph of edge density 0.5
+        Graph g = new Graph(V, true, 0.5);
         g.printGraph();
     }
     
-    // TODO: Vary V (for fixed E?)
-    private static void empiricalTestV(int maxV) throws Exception {
+    // Vary V, keeping edge density of every random graph generated at around 0.5
+    private static void empiricalTest(int maxV, GraphDensity density) throws Exception {
         int vertexCount = MIN_NO_OF_VERTICES;
         // Number of graphs that will be created
         int graphCount = maxV - vertexCount + 1;
@@ -103,10 +113,26 @@ public class Tests {
         String[] partAResults = new String[graphCount];
         String[] partBResults = new String[graphCount];
 
-        System.out.println("empiricalTest()");
+        System.out.println(String.format("empiricalTest() for %s graph%n", density));
         for (int i = 0; i < graphCount; i++) {
             System.out.println("Creating graph " + i + " with " + vertexCount + " vertices");
-            Graph g = new Graph(vertexCount++, true);
+            Graph g;
+
+            // Generate random graph based on required edge density
+            switch (density) {
+                case DENSE:
+                    g = new Graph(vertexCount++, true, 0.75);
+                    break;
+                case NEUTRAL:
+                    g = new Graph(vertexCount++, true, 0.5);
+                    break;
+                case SPARSE:
+                    g = new Graph(vertexCount++, true, 0.25);
+                    break;
+                default:
+                    g = new Graph(vertexCount++, true, 0.5);
+                    break;
+            }
             
             // Store specifications of this particular graph
             vertexArr[i] = g.V + "";
@@ -140,14 +166,9 @@ public class Tests {
         // Combine String arrays for writing to CSV
         String[][] results = {vertexArr, edgeArr, partAResults, partBResults};
         String[] headers = {"Vertex count", "Edge count", "a) avg. runtime", "b) avg. runtime"};
-        WriteToCSV.writeFile("project_2/resultsV.csv", headers, results);
+        WriteToCSV.writeFile(String.format("project_2/results_%s.csv", density), headers, results);
 
         // Completion message
-        System.out.println("\nCheck 'resultsV.csv' for updated results");
-    }
-
-    // TODO: Vary E for fixed V
-    private static void empiricalTestE(int V) throws Exception {
-        return;
+        System.out.println(String.format("\nCheck 'results_%s.csv' for updated results", density));
     }
 }
