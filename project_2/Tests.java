@@ -14,8 +14,10 @@ public class Tests {
             System.out.println("2. testDijkstraArray()");
             System.out.println("3. testDijkstraPQ()");
             System.out.println("4. testCreateRandGraph()");
-            System.out.println("5. empiricalTest()");
-            System.out.println("6. Exit\n");
+            System.out.println("5. empiricalTestV()");
+            // TODO: empiricalTestE(), vary E for fixed V
+            System.out.println("6. empiricalTestE()");
+            System.out.println("7. Exit\n");
             System.out.println("Enter choice:");
             int choice = Integer.parseInt(scan.nextLine());
             switch (choice) {
@@ -34,9 +36,13 @@ public class Tests {
                     break;
                 case 5:
                     System.out.println("Enter max. number of vertices:");
-                    empiricalTest(Integer.parseInt(scan.nextLine()));
+                    empiricalTestV(Integer.parseInt(scan.nextLine()));
                     break;
                 case 6:
+                    System.out.println("Enter number of vertices:");
+                    empiricalTestE(Integer.parseInt(scan.nextLine()));
+                    break;
+                case 7:
                     scan.close();
                     System.exit(0);
                     break;
@@ -86,7 +92,8 @@ public class Tests {
         g.printGraph();
     }
     
-    private static void empiricalTest(int maxV) throws Exception {
+    // TODO: Vary V (for fixed E?)
+    private static void empiricalTestV(int maxV) throws Exception {
         int vertexCount = MIN_NO_OF_VERTICES;
         // Number of graphs that will be created
         int graphCount = maxV - vertexCount + 1;
@@ -133,9 +140,14 @@ public class Tests {
         // Combine String arrays for writing to CSV
         String[][] results = {vertexArr, edgeArr, partAResults, partBResults};
         String[] headers = {"Vertex count", "Edge count", "a) avg. runtime", "b) avg. runtime"};
-        WriteToCSV.writeFile("project_2/results.csv", headers, results);
+        WriteToCSV.writeFile("project_2/resultsV.csv", headers, results);
 
         // Completion message
-        System.out.println("\nCheck 'results.csv' for updated results");
+        System.out.println("\nCheck 'resultsV.csv' for updated results");
+    }
+
+    // TODO: Vary E for fixed V
+    private static void empiricalTestE(int V) throws Exception {
+        return;
     }
 }
