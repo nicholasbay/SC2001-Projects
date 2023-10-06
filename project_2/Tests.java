@@ -165,7 +165,7 @@ public class Tests {
 
         // Combine String arrays for writing to CSV
         String[][] results = {vertexArr, edgeArr, partAResults, partBResults};
-        String[] headers = {"Vertex count", "Edge count", "a) avg. runtime", "b) avg. runtime"};
+        String[] headers = {"V", "E", "a) runtime", "b) runtime"};
         WriteToCSV.writeFile(String.format("project_2/results_%s.csv", density), headers, results);
 
         // Completion message
