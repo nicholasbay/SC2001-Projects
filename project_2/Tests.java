@@ -102,7 +102,7 @@ public class Tests {
         g.printGraph();
     }
     
-    // Vary V, keeping edge density of every random graph generated at around 0.5
+    // Vary V, keeping edge density of every random graph generated at specified level
     private static void empiricalTest(int maxV, GraphDensity density) throws Exception {
         int vertexCount = MIN_NO_OF_VERTICES;
         // Number of graphs that will be created
