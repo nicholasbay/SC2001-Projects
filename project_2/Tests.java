@@ -5,6 +5,8 @@ import java.util.Scanner;
 public class Tests {
     static final int MIN_NO_OF_VERTICES = 10;
     static final int RUN_COUNT_PER_GRAPH = 10;
+    static final double MIN_DENSITY = 0.01;
+    static final double MAX_DENSITY = 1;
 
     public enum GraphDensity {
         SPARSE,
@@ -22,7 +24,8 @@ public class Tests {
             System.out.println("3. testDijkstraPQ()");
             System.out.println("4. testCreateRandGraph()");
             System.out.println("5. empiricalTest()");
-            System.out.println("6. Exit\n");
+            System.out.println("6. empiricalTestFixedV()");
+            System.out.println("7. Exit\n");
             System.out.println("Enter choice:");
             choice = Integer.parseInt(scan.nextLine());
             switch (choice) {
@@ -52,6 +55,14 @@ public class Tests {
                     empiricalTest(maxV, density);
                     break;
                 case 6:
+                    System.out.println("Enter number of vertices:");
+                    int V = Integer.parseInt(scan.nextLine());
+                    System.out.println("Enter graph density interval (btw. 0 & 1 exclusive):");
+                    double interval = scan.nextDouble();
+                    scan.nextLine();
+                    empiricalTestFixedV(V, interval);
+                    break;
+                case 7:
                     scan.close();
                     System.exit(0);
                     break;
@@ -59,7 +70,7 @@ public class Tests {
                     System.out.println("Invalid choice, please try again!");
                     break;
             }
-        } while (choice != 6);
+        } while (choice != 7);
     }
 
     private static Graph sampleGraph() {
@@ -117,7 +128,7 @@ public class Tests {
 
         System.out.println(String.format("empiricalTest() for %s graph%n", density));
         for (int i = 0; i < graphCount; i++) {
-            System.out.println("Creating graph " + i + " with " + vertexCount + " vertices...");
+            System.out.println("Creating graph " + (i+1) + " with " + vertexCount + " vertices...");
             Graph g;
 
             // Generate random graph based on required edge density
@@ -141,7 +152,7 @@ public class Tests {
             edgeArr[i] = g.E + "";
             // Keep track of total empirical runtime for 10 runs
             long partATotal = 0;
-            long partBTotal= 0;
+            long partBTotal = 0;
 
             // Run Dijkstra's 10x, then take avg. runtime
             for (int j = 0; j < RUN_COUNT_PER_GRAPH; j++) {
@@ -162,7 +173,7 @@ public class Tests {
                 partBTotal += (partBEnd - partBStart);
             }
 
-            // Store avg runtime per iteration of Dijkstra's
+            // Store avg. runtime per iteration of Dijkstra's
             partAResults[i] = (partATotal / RUN_COUNT_PER_GRAPH) + "";
             partBResults[i] = (partBTotal / RUN_COUNT_PER_GRAPH) + "";
         }
@@ -174,5 +185,68 @@ public class Tests {
 
         // Completion message
         System.out.println(String.format("\nCheck 'results_%s.csv' for updated results", density));
+    }
+    // Vary edge density from 0.01 to 1 at intervals of 0.01
+    private static void empiricalTestFixedV(int V, double interval) throws Exception {
+        // Error checking
+        if (interval == 0 | interval == 1) {
+            System.out.println("Interval must be a float between 0 and 1 exclusive!");
+            return;
+        }
+
+        // Number of graphs that will be created
+        int graphCount = (int)((MAX_DENSITY - MIN_DENSITY) / interval) + 1;
+        // Initialise edge density to 0.01, then increment in intervals of 0.01
+        double edgeDensity = MIN_DENSITY;
+        
+        String[] edgeDensityArr = new String[graphCount];
+        String[] partAResults = new String[graphCount];
+        String[] partBResults = new String[graphCount];
+
+        System.out.println(String.format("empiricalTestFixedV() for V = %d%n", V));
+        for (int i = 0; i < graphCount; i++) {
+            System.out.println(String.format("Creating graph %d of edge density %.2f...", i+1, edgeDensity));
+            // Generate random graph
+            Graph g = new Graph(V, true, edgeDensity);
+            // Store specifications of this particular graph
+            edgeDensityArr[i] = edgeDensity + "";
+            // Keep track of total empirical runtime for 10 runs
+            long partATotal = 0;
+            long partBTotal = 0;
+
+            // Run Dijkstra's 10x, then take avg. runtime
+            for (int j = 0; j < RUN_COUNT_PER_GRAPH; j++) {
+                DijkstraAlgo dAlgo = new DijkstraAlgo(g.V);
+                
+                long partAStart = System.nanoTime();
+                // Perform Dijkstra's on adjMatrix using Array
+                // Do not show results as that will affect runtimes
+                dAlgo.dijkstraArray(g.V, 0, g.adjMatrix, false);
+                long partAEnd = System.nanoTime();
+                partATotal += (partAEnd - partAStart);
+
+                long partBStart = System.nanoTime();
+                // Perform Dijkstra's on adjList using PQ
+                // Do not show results as that will affect runtimes
+                dAlgo.dijkstraPQ(g.V, 0, g.adjList, false);
+                long partBEnd = System.nanoTime();
+                partBTotal += (partBEnd - partBStart);
+            }
+
+            // Store avg. runtime per iteration of Dijkstra's
+            partAResults[i] = (partATotal / RUN_COUNT_PER_GRAPH) + "";
+            partBResults[i] = (partBTotal / RUN_COUNT_PER_GRAPH) + "";
+
+            // Increment edgeDensity
+            edgeDensity += interval;
+        }
+
+        // Combine String arrays for writing to CSV
+        String[][] results = {edgeDensityArr, partAResults, partBResults};
+        String[] headers = {"Edge Density", "a) runtime", "b) runtime"};
+        WriteToCSV.writeFile("project_2/results_fixedV.csv", headers, results);
+
+        // Completion message
+        System.out.println("\nCheck 'results_fixedV.csv' for updated results");
     }
 }
