@@ -181,10 +181,11 @@ public class Tests {
         // Combine String arrays for writing to CSV
         String[][] results = {vertexArr, edgeArr, partAResults, partBResults};
         String[] headers = {"V", "E", "a) runtime", "b) runtime"};
-        WriteToCSV.writeFile(String.format("project_2/results_%s.csv", density), headers, results);
+        String filename = String.format("results_%s.csv", density);
+        WriteToCSV.writeFile("project2/" + filename, headers, results);
 
         // Completion message
-        System.out.println(String.format("\nCheck 'results_%s.csv' for updated results", density));
+        System.out.println("\nCheck '" + filename + "' for updated results");
     }
     // Vary edge density from 0.01 to 1 at intervals of 0.01
     private static void empiricalTestFixedV(int V, double interval) throws Exception {
@@ -244,9 +245,10 @@ public class Tests {
         // Combine String arrays for writing to CSV
         String[][] results = {edgeDensityArr, partAResults, partBResults};
         String[] headers = {"Edge Density", "a) runtime", "b) runtime"};
-        WriteToCSV.writeFile("project_2/results_fixedV.csv", headers, results);
+        String filename = String.format("results_fixedV_%d.csv", V);
+        WriteToCSV.writeFile("project_2/" + filename, headers, results);
 
         // Completion message
-        System.out.println("\nCheck 'results_fixedV.csv' for updated results");
+        System.out.println("\nCheck '" + filename + "' for updated results");
     }
 }
