@@ -83,7 +83,7 @@ public class DijkstraAlgo {
     }
 
     // Drivers
-    public void dijkstraArray(int V, int src, int[][] adjMatrix) {
+    public void dijkstraArray(int V, int src, int[][] adjMatrix, boolean showResults) {
         initialisation(V, src);
         int u;
         while ((u = findNextNode(V)) != -1) {
@@ -104,9 +104,13 @@ public class DijkstraAlgo {
                 }
             }
         }
-        printResult(V, src);
+
+        // Show results of Dijkstra
+        if (showResults) {
+            printResult(V, src);
+        }
     }
-    public void dijkstraPQ(int V, int src, LinkedList<Edge>[] adjList) {
+    public void dijkstraPQ(int V, int src, LinkedList<Edge>[] adjList, boolean showResults) {
         initialisation(V, src);
         // Adding first vertex (src) to pq
         pq.add(new Edge(src, src, 0));
@@ -140,6 +144,10 @@ public class DijkstraAlgo {
                 }
             }
         }
-        printResult(V, src);
+
+        // Show results of Dijkstra
+        if (showResults) {
+            printResult(V, src);
+        }
     }
 }

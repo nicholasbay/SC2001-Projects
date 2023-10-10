@@ -86,14 +86,16 @@ public class Tests {
         System.out.println("testDijkstraArray()");
         Graph g = sampleGraph();
         DijkstraAlgo dAlgo = new DijkstraAlgo(g.V);
-        dAlgo.dijkstraArray(g.V, 0, g.adjMatrix);
+        // Need to display results to ascertain correctness of implementation
+        dAlgo.dijkstraArray(g.V, 0, g.adjMatrix, true);
     }
 
     private static void testDijkstraPQ() {
         System.out.println("testDijkstraPQ()");
         Graph g = sampleGraph();
         DijkstraAlgo dAlgo = new DijkstraAlgo(g.V);
-        dAlgo.dijkstraPQ(g.V, 0, g.adjList);
+        // Need to display results to ascertain correctness of implementation
+        dAlgo.dijkstraPQ(g.V, 0, g.adjList, true);
     }
 
     private static void testCreateRandGraph(int V) {
@@ -115,7 +117,7 @@ public class Tests {
 
         System.out.println(String.format("empiricalTest() for %s graph%n", density));
         for (int i = 0; i < graphCount; i++) {
-            System.out.println("Creating graph " + i + " with " + vertexCount + " vertices");
+            System.out.println("Creating graph " + i + " with " + vertexCount + " vertices...");
             Graph g;
 
             // Generate random graph based on required edge density
@@ -147,13 +149,15 @@ public class Tests {
                 
                 long partAStart = System.nanoTime();
                 // Perform Dijkstra's on adjMatrix using Array
-                dAlgo.dijkstraArray(g.V, 0, g.adjMatrix);
+                // Do not show results as that will affect runtimes
+                dAlgo.dijkstraArray(g.V, 0, g.adjMatrix, false);
                 long partAEnd = System.nanoTime();
                 partATotal += (partAEnd - partAStart);
 
                 long partBStart = System.nanoTime();
                 // Perform Dijkstra's on adjList using PQ
-                dAlgo.dijkstraPQ(g.V, 0, g.adjList);
+                // Do not show results as that will affect runtimes
+                dAlgo.dijkstraPQ(g.V, 0, g.adjList, false);
                 long partBEnd = System.nanoTime();
                 partBTotal += (partBEnd - partBStart);
             }
